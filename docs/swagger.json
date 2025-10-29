@@ -1,0 +1,2139 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.2",
+    "title": "API for React Teachers, Nannies and Psychologists applications",
+    "description": "REST API for managing users, Lingo teachers, Nannies services and Psychologists services applications",
+    "license": {
+      "name": "Back end for Lingo Teachers project, Nannies services project and Psychologists services project",
+      "url": "https://github.com/VPresich/teachers-rest-api"
+    }
+  },
+  "consumes": ["multipart/form-data", "application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://teachers-rest-api.onrender.com/api" }],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "User authorization endpoints. Register a new user, log in a user, logout the user, refresh user session, and update user profile."
+    },
+    {
+      "name": "Teachers",
+      "description": "Get all teachers, get the teacher by id."
+    },
+    {
+      "name": "Nannies",
+      "description": "Get all nannies, get the nanny by id."
+    },
+    {
+      "name": "Psychologists",
+      "description": "Get all psychologists, get the psychologist by id."
+    },
+    {
+      "name": "Favorites",
+      "description": "Favorites endpoints. Add, remove favorite teacher/nanny/psychologist for registered user. Get all favorites teachers/nannies/ psychologists for registered user."
+    },
+    {
+      "name": "Help",
+      "description": "Send email"
+    },
+    {
+      "name": "Backgrounds",
+      "description": "Get backgrounds"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful registration",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorInRequest"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/EmailInUse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User login",
+        "parameters": [],
+        "requestBody": {
+          "description": "User login credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorInRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User logout",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+        "responses": {
+          "204": {
+            "description": "No content",
+            "content": [{}]
+          },
+          "401": {
+            "description": "Unauthorized (invaild or missing token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/current": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Refresh user information",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true
+          }
+        ],
+
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+
+        "responses": {
+          "200": {
+            "description": "User refresh successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/avatar": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user avatar Url",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/AvatarResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invaild or missing token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/avatars": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Update avatar of current user",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "Update avatar",
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAvatarRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvatarResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "patch": {
+        "summary": "Update user information",
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "Updated user information",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/UpdateProfileRequest"
+              },
+              "example": {
+                "name": "string",
+                "email": "user@example.com",
+                "password": "user@example.com",
+                "theme": "light"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User information updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/CurrentUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorInRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email in use for another user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/EmailInUse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/users/google": {
+      "get": {
+        "summary": "Redirect to Google OAuth",
+        "description": "Redirects the user to Google's OAuth 2.0 authentication page.",
+        "tags": ["Users"],
+        "responses": {
+          "302": {
+            "description": "Redirect to Google OAuth",
+            "headers": {
+              "Location": {
+                "description": "URL to redirect the user to Google's OAuth 2.0 authentication page.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/google-redirect": {
+      "get": {
+        "summary": "Google OAuth Redirect",
+        "description": "Handles the redirection from Google's OAuth 2.0 authentication page and processes the authentication code.",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "required": true,
+            "description": "Authorization code returned by Google OAuth 2.0",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to frontend with JWT token",
+            "headers": {
+              "Location": {
+                "description": "URL to redirect the user to the frontend application with JWT token.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorInRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/teachers": {
+      "get": {
+        "tags": ["Teachers"],
+        "summary": "Get teachers based on filters",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Filter by language level (e.g., A1 Beginner, B1 Intermediate)",
+            "schema": {
+              "type": "string",
+              "example": "A1 Beginner"
+            }
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language (e.g., English, Spanish)",
+            "schema": {
+              "type": "string",
+              "example": "English"
+            }
+          },
+          {
+            "name": "price_per_hour",
+            "in": "query",
+            "description": "Filter by maximum price per hour",
+            "schema": {
+              "type": "number",
+              "example": 35
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results per page (default: 4)",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/TeachersResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Page not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/teachers/{id}": {
+      "get": {
+        "tags": ["Teachers"],
+        "summary": "Get teacher by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Id of the teacher to retrieve.",
+            "schema": {
+              "type": "string",
+              "example": "6691060d059f7e247d62a761"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeacherResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Teacher not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Teacher not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites": {
+      "get": {
+        "summary": "Get all favorite teachers for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of favorite teachers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/TeacherResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favorites/{idTeacher}": {
+      "post": {
+        "summary": "Add a teacher to favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idTeacher",
+            "in": "path",
+            "required": true,
+            "description": "Id of the teacher to add to favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Favorite added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string"
+                    },
+                    "teacher": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/TeacherResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Teacher not found"
+          },
+          "409": {
+            "description": "Favorite already added for current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/FavoriteIsAdded"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a teacher from favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idTeacher",
+            "in": "path",
+            "required": true,
+            "description": "ID of the teacher for deleting from favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorite delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "teacher": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "You are not the owner of this favorite"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Teacher not found"
+          }
+        }
+      }
+    },
+    "/nannies": {
+      "get": {
+        "tags": ["Nannies"],
+        "summary": "Get nannies based on filters",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Filter by certain fields (price_per_hour)",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "example": {
+                "price_per_hour": { "$gt": 10 }
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria (e.g., A to Z, Z to A, Popular, Not Popular)",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": 1,
+                "rating": -1
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results per page (default: 4)",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/NanniesResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Page not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nannies/{id}": {
+      "get": {
+        "tags": ["Nannies"],
+        "summary": "Get nanny by Id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Id of the nanny to retrieve.",
+            "schema": {
+              "type": "string",
+              "example": "6691060d059f7e247d62a761"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NannyResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Nanny not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Nanny not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nannies/favorites": {
+      "get": {
+        "summary": "Get all favorite nannies for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of favorite nannies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/NannyResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nannies/favorites/{idNanny}": {
+      "post": {
+        "summary": "Add a nanny to favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idNanny",
+            "in": "path",
+            "required": true,
+            "description": "Id of the nanny to add to favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Favorite added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string"
+                    },
+                    "nanny": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/NannyResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The nanny not found"
+          },
+          "409": {
+            "description": "Favorite already added for current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/FavoriteIsAdded"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove the nanny from favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idNanny",
+            "in": "path",
+            "required": true,
+            "description": "Id of the nanny for deleting from favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorite delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "nanny": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "You are not the owner of this favorite"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The Nanny not found"
+          }
+        }
+      }
+    },
+
+    "/psychologists/favorites": {
+      "get": {
+        "summary": "Get all favorite psychologists for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of favorite psychologists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "$ref": "#/components/schemas/PsycologistResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/psychologists/favorites/{idPsychologist}": {
+      "post": {
+        "summary": "Add a psychologist to favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idPsychologist",
+            "in": "path",
+            "required": true,
+            "description": "Id of the idPsychologist to add to favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Favorite added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "string"
+                    },
+                    "psychologist": {
+                      "type": "object",
+                      "$ref": "#/components/schemas/PsychologistResponse"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Psychologist not found"
+          },
+          "409": {
+            "description": "Favorite already added for current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/FavoriteIsAdded"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove the psychologist from favorites for current user",
+        "tags": ["Favorites"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "idPsychologist",
+            "in": "path",
+            "required": true,
+            "description": "Id of the psychologist for deleting from favorites",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorite delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "string"
+                    },
+                    "psyhologist": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/BadLoginResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "You are not the owner of this favorite"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Psychologist not found"
+          }
+        }
+      }
+    },
+
+    "/psychologists": {
+      "get": {
+        "tags": ["Psychologists"],
+        "summary": "Get psychologists based on filters",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Filter by certain fields (price_per_hour)",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "example": {
+                "price_per_hour": { "$gt": 10 }
+              }
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sorting criteria (e.g., A to Z, Z to A, Popular, Not Popular)",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "example": {
+                "name": 1,
+                "rating": -1
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (default: 1)",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results per page (default: 4)",
+            "schema": {
+              "type": "integer",
+              "default": 4
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Empty request body",
+          "content": {},
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/PsychologistsResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Page not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Page not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/helps": {
+      "post": {
+        "summary": "Create a new help request",
+        "tags": ["Help"],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Bearer token",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "$ref": "#/components/schemas/HelpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Help request created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Help request received"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body or parameters)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/ErrorInRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invaild or missing token)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password"
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password"
+          }
+        }
+      },
+
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      },
+
+      "UpdateProfileRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "password": {
+            "type": "string",
+            "format": "email",
+            "description": "User's password"
+          },
+          "theme": {
+            "type": "string",
+            "description": "User's theme",
+            "enum": ["light", "dark", "violet"]
+          }
+        }
+      },
+
+      "UpdateAvatarRequest": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary",
+            "description": "User's avatar file"
+          }
+        },
+        "required": ["avatar"]
+      },
+
+      "HelpRequest": {
+        "type": "object",
+        "required": ["email", "text"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "text": {
+            "type": "string",
+            "description": "User's message"
+          }
+        }
+      },
+
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "description": "JWT token for authentication",
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "test1970"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "example": "test1970@test1970.com"
+              },
+              "avatarURL": {
+                "type": "string",
+                "format": "uri",
+                "example": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1717687717/def-avatar-light_1x_fkwy6u.jpg"
+              },
+              "theme": {
+                "type": "string",
+                "example": "light"
+              }
+            }
+          }
+        }
+      },
+
+      "CurrentUserResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User's email"
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL"
+          },
+          "theme": {
+            "type": "string",
+            "description": "User's theme",
+            "enum": ["light", "dark", "violet"]
+          }
+        }
+      },
+
+      "AvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar URL"
+          }
+        }
+      },
+
+      "TeacherResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The teacher ID"
+          },
+          "name": {
+            "type": "string",
+            "example": "Sophie"
+          },
+          "surname": {
+            "type": "string",
+            "example": "Davis"
+          },
+          "languages": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "English",
+                "German",
+                "Spanish",
+                "French",
+                "Mandarin Chinese",
+                "Italian",
+                "Korean",
+                "Vietnamese"
+              ]
+            },
+            "example": ["English", "Spanish"]
+          },
+          "levels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "A1 Beginner",
+                "A2 Elementary",
+                "B1 Intermediate",
+                "B2 Upper-Intermediate",
+                "C1 Advanced",
+                "C2 Proficient"
+              ]
+            },
+            "example": [
+              "A1 Beginner",
+              "A2 Elementary",
+              "B1 Intermediate",
+              "B2 Upper-Intermediate"
+            ]
+          },
+          "rating": {
+            "type": "number",
+            "example": 4.9
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reviewer_name": {
+                  "type": "string",
+                  "example": "Oliver"
+                },
+                "reviewer_rating": {
+                  "type": "number",
+                  "example": 5
+                },
+                "comment": {
+                  "type": "string",
+                  "example": "Sophie is an excellent teacher. Her lessons are engaging and effective."
+                }
+              }
+            }
+          },
+          "price_per_hour": {
+            "type": "number",
+            "example": 27
+          },
+          "lessons_done": {
+            "type": "number",
+            "example": 1265
+          },
+          "avatar_url": {
+            "type": "string",
+            "example": "https://ftp.goit.study/img/avatars/25.jpg"
+          },
+          "lesson_info": {
+            "type": "string",
+            "example": "Lessons focus on building language skills through interactive activities and practical exercises."
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Teaches adults and teenagers (16 years and above)."
+            }
+          },
+          "experience": {
+            "type": "string",
+            "example": "Sophie has been teaching English and Spanish for 6 years. She has a strong command of both languages and is dedicated to helping her students achieve their language learning goals. Sophie's teaching approach emphasizes engaging and effective lessons that incorporate interactive activities and practical exercises. Her lessons are designed to build language skills, improve fluency, and enhance communication abilities. With her patient and supportive teaching style, Sophie creates a positive and productive learning environment for her students."
+          }
+        }
+      },
+
+      "TeachersResponse": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records matching the query"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages based on the limit"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page"
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeacherResponse"
+            },
+            "description": "List of teachers matching the query criteria"
+          }
+        }
+      },
+
+      "NannyResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The nanny ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "The nanny's name",
+            "example": "Jane Doe",
+            "pattern": "NAME_PATTERN"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "URL of the avatar image",
+            "format": "url",
+            "example": "https://example.com/avatar.jpg"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "description": "The nanny's date of birth",
+            "example": "1990-05-15"
+          },
+          "experience": {
+            "type": "string",
+            "description": "The nanny's experience in years",
+            "example": "5 years"
+          },
+          "reviews": {
+            "type": "array",
+            "description": "List of reviews for the nanny",
+            "items": {
+              "type": "object",
+              "required": ["reviewer", "rating", "comment"],
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "description": "The name of the reviewer",
+                  "example": "John Smith"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "The rating given by the reviewer",
+                  "example": 4.5
+                },
+                "comment": {
+                  "type": "string",
+                  "description": "The review comment",
+                  "example": "Very good nanny"
+                }
+              }
+            }
+          },
+          "price_per_hour": {
+            "type": "number",
+            "description": "The hourly rate for the nanny",
+            "example": 20
+          },
+          "education": {
+            "type": "string",
+            "description": "The nanny's education level",
+            "example": "Early Childhood Education"
+          },
+          "kids_age": {
+            "type": "string",
+            "description": "The age group of children the nanny works with",
+            "example": "3-5 years"
+          },
+          "location": {
+            "type": "string",
+            "description": "The nanny's location",
+            "example": "New York, USA"
+          },
+          "about": {
+            "type": "string",
+            "description": "A brief description about the nanny",
+            "example": "I love children and have been working with them for over 5 years."
+          },
+          "characters": {
+            "type": "array",
+            "description": "Key characteristics of the nanny",
+            "items": {
+              "type": "string",
+              "example": "Responsibility"
+            }
+          },
+          "rating": {
+            "type": "number",
+            "description": "The overall rating of the nanny",
+            "example": 4.7
+          }
+        }
+      },
+
+      "NanniesResponse": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records matching the query"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages based on the limit"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page"
+          },
+          "nanies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NannyResponse"
+            },
+            "description": "List of nannies matching the query criteria"
+          }
+        }
+      },
+
+      "PsychologistResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The psychologist's ID",
+            "example": "66fd08796f48ecab4e3cf237"
+          },
+          "name": {
+            "type": "string",
+            "description": "The psychologist's name",
+            "example": "Dr. Benjamin Smith"
+          },
+          "avatar_url": {
+            "type": "string",
+            "description": "URL of the psychologist's avatar image",
+            "format": "url",
+            "example": "https://ftp.goit.study/img/avatars/19.jpg"
+          },
+          "experience": {
+            "type": "string",
+            "description": "The psychologist's experience in years",
+            "example": "20 years"
+          },
+          "reviews": {
+            "type": "array",
+            "description": "List of reviews for the psychologist",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "The review ID",
+                  "example": "66fd80b5fa5b24921423aec4"
+                },
+                "reviewer": {
+                  "type": "string",
+                  "description": "The name of the reviewer",
+                  "example": "Emily Turner"
+                },
+                "rating": {
+                  "type": "number",
+                  "description": "The rating given by the reviewer",
+                  "example": 4.9
+                },
+                "comment": {
+                  "type": "string",
+                  "description": "The review comment",
+                  "example": "Dr. Smith is an exceptional psychologist. His guidance has been life-changing for me."
+                }
+              }
+            }
+          },
+          "price_per_hour": {
+            "type": "number",
+            "description": "The hourly rate for the psychologist",
+            "example": 190
+          },
+          "rating": {
+            "type": "number",
+            "description": "The overall rating of the psychologist",
+            "example": 4.8
+          },
+          "license": {
+            "type": "string",
+            "description": "The psychologist's license information",
+            "example": "Licensed Psychologist (License #67890)"
+          },
+          "specialization": {
+            "type": "string",
+            "description": "The psychologist's area of specialization",
+            "example": "Couples Counseling"
+          },
+          "initial_consultation": {
+            "type": "string",
+            "description": "Information about the initial consultation",
+            "example": "Free 45-minute initial consultation"
+          },
+          "about": {
+            "type": "string",
+            "description": "A brief description about the psychologist",
+            "example": "Dr. Benjamin Smith is a highly experienced and licensed psychologist specializing in Couples Counseling..."
+          }
+        }
+      },
+
+      "PsychologistsResponse": {
+        "type": "object",
+        "properties": {
+          "totalRecords": {
+            "type": "integer",
+            "description": "Total number of records matching the query"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of pages based on the limit"
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Number of results per page"
+          },
+          "psychologists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PsychologistResponse"
+            },
+            "description": "List of psychologists matching the query criteria"
+          }
+        }
+      },
+
+      "BackgroundResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The background ID"
+          },
+          "imgUrl_desktop_2x": {
+            "type": "string",
+            "description": "URL for desktop image 2x"
+          },
+          "imgUrl_desktop_1x": {
+            "type": "string",
+            "description": "URL for desktop image 1x"
+          },
+          "imgUrl_mobile_1x": {
+            "type": "string",
+            "description": "URL for mobile image 1x"
+          },
+          "imgUrl_mobile_2x": {
+            "type": "string",
+            "description": "URL for mobile image 2x"
+          },
+          "imgUrl_tablet_1x": {
+            "type": "string",
+            "description": "URL for tablet image 1x"
+          },
+          "imgUrl_tablet_2x": {
+            "type": "string",
+            "description": "URL for tablet image 2x"
+          },
+          "label": {
+            "type": "string",
+            "description": "Label image URL"
+          }
+        },
+        "example": {
+          "_id": "665dab40d37019ad00137c09",
+          "imgUrl_desktop_2x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718033987/theme01_desktop_2x_vpsnlj.jpg",
+          "imgUrl_desktop_1x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718033986/theme01_desktop_1x_brzmfg.jpg",
+          "imgUrl_mobile_1x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718040177/theme01_mobile_1x_xqz8kb.jpg",
+          "imgUrl_mobile_2x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718040182/theme01_mobile_2x_eah6jm.jpg",
+          "imgUrl_tablet_1x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718038720/theme01_tablet_1x_yin395.jpg",
+          "imgUrl_tablet_2x": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718038720/theme01_tablet_2x_s1glrh.jpg",
+          "label": "https://res.cloudinary.com/dirtbd4yk/image/upload/v1718041846/vector-01_wvpiqx.jpg"
+        }
+      },
+
+      "ErrorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Not authorized"
+        }
+      },
+
+      "ErrorInRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Error message"
+        }
+      },
+
+      "EmailInUse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Email in use"
+        }
+      },
+
+      "FavoriteIsAdded": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Favorite already exists"
+        }
+      },
+
+      "BadLoginResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "message": "Email or password is wrong"
+        }
+      }
+    }
+  }
+}
