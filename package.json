@@ -1,5 +1,5 @@
 {
-  "name": "goit-dataanalysis-api-mongodb",
+  "name": "dataanalysis-api-mongodb",
   "version": "1.0.0",
   "description": "Dataanalysis (mongo db)",
   "main": "src/app.js",
