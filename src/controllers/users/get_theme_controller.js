@@ -1,17 +1,13 @@
-import User from '../../models/user.js';
-import createHttpError from 'http-errors';
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
+import getUserThemeService from '../../services/users/get_user_theme_service.js';
 
-const getThemeController = ctrlWrapper(async (req, res, next) => {
-  const { id, theme } = req.user;
-
-  const user = await User.findById(id);
-  if (!user) {
-    throw createHttpError(401, 'Not found');
-  }
-  if (!user.theme) {
-    throw createHttpError(404, 'Theme not found');
-  }
+/**
+ * Controller to get the current user's theme.
+ * Uses getUserTheme service and sends response.
+ */
+const getThemeController = ctrlWrapper(async (req, res) => {
+  const { id } = req.user;
+  const theme = await getUserThemeService(id);
   res.status(200).json({ theme });
 });
 

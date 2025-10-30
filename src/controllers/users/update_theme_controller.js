@@ -1,26 +1,17 @@
-import User from '../../models/user.js';
-import createHttpError from 'http-errors';
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
-import Theme from '../../models/theme.js';
+import updateUserThemeService from '../../services/users/update_user_theme_service.js';
 
-const updateThemeController = ctrlWrapper(async (req, res, next) => {
-  const { id, app } = req.user;
+/**
+ * Controller to update the current user's theme.
+ * Receives color from request body and updates user's theme.
+ */
+const updateThemeController = ctrlWrapper(async (req, res) => {
+  const { id } = req.user;
   const { color } = req.body;
-  const user = await User.findById(id);
-  if (!user) {
-    throw createHttpError(404, 'User not found');
-  }
 
-  let theme = await Theme.findOne({ user: id, app });
+  const updatedTheme = await updateUserThemeService(id, color);
 
-  if (!theme) {
-    theme = await Theme.create({ user: id, app, color });
-  } else {
-    theme.color = color;
-    await theme.save();
-  }
-
-  res.status(200).json({ theme: theme.color });
+  res.status(200).json({ theme: updatedTheme });
 });
 
 export default updateThemeController;
