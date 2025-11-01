@@ -12,7 +12,6 @@ const PORT = Number(env('PORT', '8000'));
 
 export const setupServer = () => {
   const app = express();
-  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use(
     pino({

@@ -1,11 +1,11 @@
 import multer from 'multer';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { TEMP_UPLOAD_DIR } from '../constants/index.js';
 
-const tempDir = path.resolve('tmp');
 const multerConfig = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, tempDir);
+  destination: (_req, _file, cb) => {
+    cb(null, TEMP_UPLOAD_DIR);
   },
 
   filename: (req, file, cb) => {
@@ -15,9 +15,9 @@ const multerConfig = multer.diskStorage({
     cb(null, `${baseName}-${suffix}${extName}`);
   },
 
-  limits: { filesize: 2048 },
+  limits: { fileSize: 2048 },
 });
 
-const upload = multer({ storage: multerConfig });
+const uploadMiddleware = multer({ storage: multerConfig });
 
-export default upload;
+export default uploadMiddleware;

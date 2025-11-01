@@ -12,9 +12,9 @@ export const SMTP = {
 export const TEMPLATES_DIR = path.join(process.cwd(), 'src', 'templates');
 
 export const CLOUDINARY = {
-  CLOUD_NAME: 'CLOUD_NAME',
-  API_KEY: 'API_KEY',
-  API_SECRET: 'API_SECRET',
+  CLOUD_NAME: 'CLOUDINARY_NAME',
+  API_KEY: 'CLOUDINARY_API_KEY',
+  API_SECRET: 'CLOUDINARY_API_SECRET',
 };
 
 export const TEMP_UPLOAD_DIR = path.join(process.cwd(), 'tmp');
@@ -42,3 +42,5 @@ export const PATH_DEF_BLACK_AVATAR =
 
 export const NAME_ERR_MESSAGE =
   'must contain only letters, numbers, and special characters, and be between 2 and 32 characters long';
+
+export const NUMERIC_FIELDS = new Set(['X', 'Y', 'Z', 'Time', 'TrackNum']);

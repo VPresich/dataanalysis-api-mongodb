@@ -55,8 +55,8 @@ const authMiddleware = async (req, _, next) => {
     };
 
     next();
-  } catch (error) {
-    next(createHttpError(401, `Unauthorized: ${error.message}`));
+  } catch {
+    next(createHttpError(401, `Unauthorized`));
   }
 };
 

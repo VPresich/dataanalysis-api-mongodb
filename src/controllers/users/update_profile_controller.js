@@ -4,7 +4,6 @@ import User from '../../models/user.js';
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
 import { uploadFileToCloudinary } from '../../utils/upload_cloudinary.js';
 import { AVATAR_SIZE } from '../../constants/index.js';
-import { deleteFile } from '../../helpers/imageUtiles.js';
 
 export const updateProfileController = ctrlWrapper(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -31,7 +30,7 @@ export const updateProfileController = ctrlWrapper(async (req, res, next) => {
       AVATAR_SIZE
     );
   }
-  await deleteFile(tempUpload);
+
   const updatedUserData = {};
   if (name) updatedUserData.name = name;
   if (email) updatedUserData.email = email;
