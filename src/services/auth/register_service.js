@@ -2,9 +2,10 @@ import bcrypt from 'bcrypt';
 import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
+import { env } from '../../utils/env.js';
 import User from '../../models/user.js';
 import { PATH_DEF_LIGHT_AVATAR, DEF_THEME } from '../../constants/index.js';
-// import sendVerificationToken from '../../helpers/sendVerificationToken.js';
+import sendVerificationToken from './send_verification_token.js';
 
 const registerService = async ({ name, email, password }) => {
   const emailInLowerCase = email.toLowerCase();
@@ -33,10 +34,24 @@ const registerService = async ({ name, email, password }) => {
     token: null, // JWT token will be added later
   });
 
-  // -----------------------------
-  // Optional: Send verification email
-  // await sendVerificationToken(emailInLowerCase, verificationToken);
-  // -----------------------------
+  const requireVerification = env('REQUIRE_EMAIL_VERIFICATION') === 'true';
+
+  if (requireVerification) {
+    try {
+      await sendVerificationToken(emailInLowerCase, verificationToken);
+      return {
+        verifyRequired: true,
+        user: {
+          name: newUser.name,
+          email: newUser.email,
+        },
+        message: 'Verification email sent. Please check your inbox.',
+      };
+    } catch (err) {
+      console.error('Failed to send verification email:', err.message);
+      throw createHttpError(500, 'Failed to send verification email');
+    }
+  }
 
   // Generate JWT token
   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -50,6 +65,7 @@ const registerService = async ({ name, email, password }) => {
   // Return token and user info
   return {
     token,
+    verifyRequired: false,
     user: {
       name: newUser.name,
       email: newUser.email,

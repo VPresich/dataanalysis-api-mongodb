@@ -6,6 +6,7 @@ import {
   registerSchema,
   loginSchema,
   emailSchema,
+  resetPasswordSchema,
 } from '../schemas/user_schemas.js';
 
 const authRouter = express.Router();
@@ -15,15 +16,26 @@ authRouter.post(
   validateBody(registerSchema),
   auth.registerController
 );
-authRouter.get('/verify/:verificationToken', auth.verifyEmailController);
+
+//verification email
 authRouter.post(
   '/verify',
   validateBody(emailSchema),
   auth.resendVerifyEmailController
 );
+authRouter.get('/verify/:verificationToken', auth.verifyEmailController);
+
 authRouter.post('/login', validateBody(loginSchema), auth.loginController);
 authRouter.post('/logout', authMiddleware, auth.logoutController);
 authRouter.get('/google', auth.googleAuthController);
 authRouter.get('/google-redirect', auth.googleRedirectController);
+
+// change password
+authRouter.post(
+  '/send-reset-email',
+  validateBody(emailSchema),
+  auth.requestResetEmailController
+);
+authRouter.post('/reset-pwd', validateBody(resetPasswordSchema));
 
 export default authRouter;

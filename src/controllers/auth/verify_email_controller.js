@@ -1,24 +1,16 @@
-import createHttpError from 'http-errors';
-import User from '../../models/user.js';
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
+import { env } from '../../utils/env.js';
+import verifyEmailService from '../../services/auth/verify_email_service.js';
 
 const verifyEmailController = ctrlWrapper(async (req, res) => {
   const { verificationToken } = req.params;
-  const user = await User.findOne({ verificationToken });
-  if (!user) {
-    throw createHttpError(404, 'User not found');
-  }
-  if (user.verify) {
-    throw createHttpError(400, 'Verification has already been passed');
-  }
-  await User.findByIdAndUpdate(user._id, {
-    verify: true,
-    verificationToken: null,
-  });
+  try {
+    await verifyEmailService(verificationToken);
 
-  res.status(200).json({
-    message: 'Verification successful',
-  });
+    res.redirect(`${env('FRONTEND_BASE_URL')}verified-success`);
+  } catch {
+    res.redirect(`${env('FRONTEND_BASE_URL')}verified-error`);
+  }
 });
 
 export default verifyEmailController;
