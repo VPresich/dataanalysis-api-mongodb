@@ -1,14 +1,4 @@
-import {
-  DataAnalysis10,
-  DataAnalysis11,
-  DataAnalysis12,
-  DataAnalysis13,
-  DataAnalysis14,
-  DataAnalysis15,
-  DataAnalysis16,
-  DataAnalysis17,
-  DataAnalysis18,
-} from '../../models/dataAnalysis.js';
+import { DataAnalysis10, DataAnalysis18 } from '../../models/dataAnalysis.js';
 
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
 
@@ -39,27 +29,7 @@ const getFilteredDataController = ctrlWrapper(async (req, res, next) => {
     case 10:
       dataRecords = await DataAnalysis10.find(queryConditions);
       break;
-    case 11:
-      dataRecords = await DataAnalysis11.find(queryConditions);
-      break;
-    case 12:
-      dataRecords = await DataAnalysis12.find(queryConditions);
-      break;
-    case 13:
-      dataRecords = await DataAnalysis13.find(queryConditions);
-      break;
-    case 14:
-      dataRecords = await DataAnalysis14.find(queryConditions);
-      break;
-    case 15:
-      dataRecords = await DataAnalysis15.find(queryConditions);
-      break;
-    case 16:
-      dataRecords = await DataAnalysis16.find(queryConditions);
-      break;
-    case 17:
-      dataRecords = await DataAnalysis17.find(queryConditions);
-      break;
+
     case 18:
       dataRecords = await DataAnalysis18.find(queryConditions);
       break;

@@ -4,12 +4,12 @@ import uploadDataService from '../../services/data/upload_data_service.js';
 
 const uploadDataController = ctrlWrapper(async (req, res, next) => {
   const { id } = req.user;
-  const { datafile } = req.file;
+  const datafile = req.file;
   const {
     source_number,
     source_name = 'dataIMM',
     file_name = '',
-    source_comments = '',
+    source_comment = '',
   } = req.body;
 
   if (!id) return next(createHttpError(401, 'Unauthorized'));
@@ -26,7 +26,7 @@ const uploadDataController = ctrlWrapper(async (req, res, next) => {
     source_number: sNumber,
     source_name,
     file_name,
-    source_comments,
+    source_comment,
     fileObj: datafile,
   });
 

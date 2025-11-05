@@ -37,6 +37,6 @@ const dataSchema = new mongoose.Schema(
   }
 );
 
-const Data = mongoose.model('Data', dataSchema);
+const Data = mongoose.model('Data', dataSchema, 'data');
 
 export default Data;

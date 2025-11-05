@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import { env } from '../../utils/env.js';
 import User from '../../models/user.js';
-import { PATH_DEF_LIGHT_AVATAR, DEF_THEME } from '../../constants/index.js';
+import { PATH_DEF_AVATAR, DEF_THEME } from '../../constants/index.js';
 import sendVerificationToken from './send_verification_token.js';
 
 const registerService = async ({ name, email, password }) => {
@@ -19,7 +19,7 @@ const registerService = async ({ name, email, password }) => {
   // Hash the password
   const hashPassword = await bcrypt.hash(password, 10);
 
-  const avatarURL = PATH_DEF_LIGHT_AVATAR;
+  const avatarURL = PATH_DEF_AVATAR;
   const verificationToken = crypto.randomUUID();
 
   // Create a new user

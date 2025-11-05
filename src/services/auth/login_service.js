@@ -1,6 +1,7 @@
 import createHttpError from 'http-errors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { env } from '../../utils/env.js';
 import User from '../../models/user.js';
 import { DEF_THEME } from '../../constants/index.js';
 
@@ -25,10 +26,9 @@ export const loginService = async (email, password) => {
     throw createHttpError(401, 'Email or password is wrong');
   }
 
-  // Uncomment if account verification is needed
-  // if (!user.verify) {
-  //   throw createHttpError(401, 'Your account is not verified');
-  // }
+  if (env('REQUIRE_EMAIL_VERIFICATION') === 'true' && !user.verify) {
+    throw createHttpError(403, 'Your account is not verified');
+  }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {

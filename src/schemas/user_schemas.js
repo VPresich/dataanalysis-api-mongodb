@@ -28,7 +28,7 @@ export const profileSchema = Joi.object({
   email: Joi.string().email().optional().pattern(EMAIL_PATTERN),
   password: Joi.string().min(6).optional(),
   theme: Joi.string()
-    .valid('yellow', 'green', 'blue', 'pink', 'red')
+    .valid('yellow', 'green', 'blue', 'pink', 'red', 'default')
     .insensitive()
     .optional(),
 });

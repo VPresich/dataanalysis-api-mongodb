@@ -8,11 +8,14 @@ import { dataSchema } from '../schemas/data_schemas.js';
 
 const dataRouter = express.Router();
 
-dataRouter.get('/', data.getAllDataController);
-//dataRouter.get('/:number', data.getDataByNumberController);
-dataRouter.get('/:number', validateTimeParams, data.getFilteredDataController);
+dataRouter.get(
+  '/:number',
+  authMiddleware,
+  validateTimeParams,
+  data.getUserDataController
+);
 
-dataRouter.post(
+dataRouter.patch(
   '/upload',
   authMiddleware,
   uploadMiddleware.single('datafile'),

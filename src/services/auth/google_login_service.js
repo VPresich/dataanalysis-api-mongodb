@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../../models/user.js';
-import { PATH_DEF_LIGHT_AVATAR } from '../../constants/index.js';
+import { PATH_DEF_AVATAR } from '../../constants/index.js';
 
 /**
  * Service for handling Google OAuth login.
@@ -41,7 +41,7 @@ export const googleLoginService = async ({ userInfo, tokens }) => {
         email: emailLower,
         password: hashPassword,
         googleId,
-        avatarURL: PATH_DEF_LIGHT_AVATAR,
+        avatarURL: PATH_DEF_AVATAR,
         verificationToken: 'verified',
         verify: true,
       });

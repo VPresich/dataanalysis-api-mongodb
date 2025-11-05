@@ -15,7 +15,7 @@ const multerConfig = multer.diskStorage({
     cb(null, `${baseName}-${suffix}${extName}`);
   },
 
-  limits: { fileSize: 2048 },
+  limits: { fileSize: 2 * 1024 * 1024 },
 });
 
 const uploadMiddleware = multer({ storage: multerConfig });
