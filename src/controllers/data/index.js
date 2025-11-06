@@ -1,12 +1,15 @@
-import getDataByNumberController from './get_data_bynumber_controller.js';
-import getFilteredDataController from './get_data_withfilter_controller.js';
-import getUserDataController from './get_user_data_controller.js';
-
+import getDataBySourceController from './get_data_by_source_controller.js';
+import getFilteredDataBySourceController from './get_filtered_data_by_source_controller.js';
+import getNonameDataController from './get_noname_data_controller.js';
+import getNonameDataBySourceController from './get_noname_data_by_source_controller copy.js';
 import uploadDataController from './upload_data_controller.js';
+import deleteDataBySourceController from './delete_data_by_source_controller.js';
 
 export default {
-  getUserDataController,
-  getDataByNumberController,
-  getFilteredDataController,
+  getDataBySourceController,
+  getFilteredDataBySourceController,
+  getNonameDataController,
+  getNonameDataBySourceController,
+  deleteDataBySourceController,
   uploadDataController,
 };

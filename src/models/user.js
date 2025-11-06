@@ -42,8 +42,8 @@ const userSchema = new mongoose.Schema(
     },
     theme: {
       type: String,
-      enum: ['yellow', 'green', 'blue', 'pink', 'red', 'default'], // allowed theme colors
-      default: 'yellow',
+      enum: ['yellow', 'green', 'blue', 'red', 'default'], // allowed theme colors
+      default: 'default',
       lowercase: true,
     },
     googleId: {

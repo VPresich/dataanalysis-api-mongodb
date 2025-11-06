@@ -1,4 +1,6 @@
+import createHttpError from 'http-errors';
 import Data from '../../models/data.js';
+import DataSource from '../../models/data_source.js';
 
 /**
  * Fetch user data filtered by source number and optional time range.
@@ -8,15 +10,22 @@ import Data from '../../models/data.js';
  * @param {string} [endTime] - Optional end time filter
  * @returns {Promise<Array>} Array of data documents
  */
-export const getUserDataService = async (
-  userId,
-  sourceNumber,
+const getFilteredDataBySourceService = async ({
+  id,
+  number,
   startTime,
-  endTime
-) => {
+  endTime,
+}) => {
+  const source = await DataSource.findOne({
+    id_user: id,
+    source_number: parseInt(number, 10),
+  });
+
+  if (!source) {
+    throw createHttpError(404, 'Source not found for this user');
+  }
   const queryConditions = {
-    id_user: userId,
-    source_number: sourceNumber,
+    id_source: source._id,
   };
 
   // Optional time filters
@@ -31,5 +40,8 @@ export const getUserDataService = async (
     queryConditions.Time = { $lte: parseFloat(endTime) };
   }
 
-  return await Data.find(queryConditions);
+  const dataRecords = await Data.find(queryConditions);
+  return dataRecords;
 };
+
+export default getFilteredDataBySourceService;

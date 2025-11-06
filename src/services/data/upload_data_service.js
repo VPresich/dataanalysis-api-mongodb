@@ -1,10 +1,7 @@
-import fs from 'fs';
-import csv from 'csv-parser';
 import createHttpError from 'http-errors';
-
-import DataSource from '../../models/data_source.js'; // fixed import path
-import Data from '../../models/data.js'; // model for detailed data
-import User from '../../models/user.js'; // user model for authorization check
+import { parseAndSaveCsv } from './parser_csv.js';
+import DataSource from '../../models/data_source.js';
+import User from '../../models/user.js';
 
 const uploadDataService = async ({
   id,
@@ -33,25 +30,12 @@ const uploadDataService = async ({
   });
   await dataSource.save();
 
-  const results = [];
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(fileObj.path)
-      .pipe(csv())
-      .on('data', row => results.push({ id_source: dataSource._id, ...row }))
-      .on('end', async () => {
-        try {
-          await Data.insertMany(results);
-          resolve({
-            message: 'Data uploaded successfully',
-            sourceId: dataSource._id,
-            totalRecords: results.length,
-          });
-        } catch (err) {
-          reject(err);
-        }
-      })
-      .on('error', err => reject(err));
-  });
+  try {
+    const result = await parseAndSaveCsv(fileObj, dataSource);
+    return result;
+  } catch {
+    throw createHttpError(500, 'Error in parser CSV file');
+  }
 };
 
 export default uploadDataService;

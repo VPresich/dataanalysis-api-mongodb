@@ -27,7 +27,7 @@ export const PHONE_PATTERN = /^\(\d{3}\) \d{3}-\d{4}$/;
 export const NAME_PATTERN =
   /^[a-zA-Z0-9!@#$%^&*()_+={}[\]:;"'<>,.?|`~\s-]{2,32}$/;
 
-export const DEF_THEME = 'green';
+export const DEF_THEME = 'default';
 
 export const AVATAR_SIZE = 68;
 

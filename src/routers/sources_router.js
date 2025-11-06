@@ -5,5 +5,6 @@ import dataSources from '../controllers/data_sources/index.js';
 const sourcesRouter = express.Router();
 
 sourcesRouter.get('/', authMiddleware, dataSources.getAllSourcesController);
+sourcesRouter.get('/noname/sources', dataSources.getNonameSourcesController);
 
 export default sourcesRouter;
