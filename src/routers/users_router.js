@@ -12,7 +12,7 @@ usersRouter.patch(
   '/',
   authMiddleware,
   validateBody(profileSchema),
-  users.getCurrentController
+  users.updateUserInfoController
 );
 
 usersRouter.patch(

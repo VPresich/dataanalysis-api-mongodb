@@ -8,13 +8,13 @@ import createHttpError from 'http-errors';
  * @returns {string} updated theme color
  * @throws HTTPError 404 if user not found
  */
-const updateUserThemeService = async (userId, color) => {
+const updateUserThemeService = async (userId, theme) => {
   const user = await User.findById(userId);
   if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
-  user.theme = color;
+  user.theme = theme;
   await user.save();
 
   return user.theme;

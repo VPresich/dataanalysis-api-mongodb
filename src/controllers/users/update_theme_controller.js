@@ -7,9 +7,9 @@ import updateUserThemeService from '../../services/users/update_user_theme_servi
  */
 const updateThemeController = ctrlWrapper(async (req, res) => {
   const { id } = req.user;
-  const { color } = req.body;
+  const { theme } = req.body;
 
-  const updatedTheme = await updateUserThemeService(id, color);
+  const updatedTheme = await updateUserThemeService(id, theme);
 
   res.status(200).json({ theme: updatedTheme });
 });

@@ -1,51 +1,28 @@
-import bcrypt from 'bcrypt';
-import createHttpError from 'http-errors';
-import User from '../../models/user.js';
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
-import { uploadFileToCloudinary } from '../../utils/upload_cloudinary.js';
-import { AVATAR_SIZE } from '../../constants/index.js';
+import updateUserProfileService from '../../services/users/update_user_profile_service.js';
 
+/**
+ * Controller: Updates the user's profile information (name, password, theme, avatar).
+ * Handles the request, calls the update service, and returns the updated user data.
+ */
 export const updateProfileController = ctrlWrapper(async (req, res, next) => {
-  const { name, email, password } = req.body;
   const { id } = req.user;
-  const { path: tempUpload } = req.file;
-
-  const existingUser = await User.findOne({ email });
-  if (existingUser && !existingUser._id.equals(id)) {
-    throw createHttpError(409, 'Email already in use');
-  }
-
-  let hashPassword = null;
-  if (password) {
-    hashPassword = await bcrypt.hash(password, 10);
-  }
-  const fileName = `${id}avatar`;
-  const folder = 'avatars';
-  let avatarURL = '';
-  if (tempUpload) {
-    avatarURL = await uploadFileToCloudinary(
-      tempUpload,
-      fileName,
-      folder,
-      AVATAR_SIZE
-    );
-  }
-
-  const updatedUserData = {};
-  if (name) updatedUserData.name = name;
-  if (email) updatedUserData.email = email;
-  if (hashPassword) updatedUserData.password = hashPassword;
-  if (avatarURL) updatedUserData.avatarURL = avatarURL;
-
-  const updatedUser = await User.findByIdAndUpdate(id, updatedUserData, {
-    new: true,
+  const { file } = req;
+  const { name, password, theme } = req.body;
+  const updatedUser = await updateUserProfileService({
+    id,
+    name,
+    password,
+    theme,
+    file,
   });
 
   res.status(200).json({
+    _id: updatedUser._id,
     name: updatedUser.name,
     email: updatedUser.email,
-    avatarURL: updatedUser.avatarURL,
     theme: updatedUser.theme,
+    avatarURL: updatedUser.avatarURL,
   });
 });
 

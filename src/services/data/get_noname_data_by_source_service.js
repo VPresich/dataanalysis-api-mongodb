@@ -1,4 +1,6 @@
+import createHttpError from 'http-errors';
 import DataSource from '../../models/data_source.js';
+
 import Data from '../../models/data.js';
 import User from '../../models/user.js';
 
@@ -17,24 +19,25 @@ import User from '../../models/user.js';
  * If the noname user, source, or data records are missing,
  * the function returns empty array instead of throwing an error.
  *
- * @async
- * @function getNonameDataService
- * @returns {Promise<Object>} - Object containing:
- *   - {Array} sources - List of all "noname" user's sources (may be empty).
- *   - {Object} source - The latest source details.
- *   - {Array} data - Data records associated with the latest source (may be empty).
  */
 
-const getNonameDataBySourceService = async number => {
+const getNonameDataBySourceService = async sourceNumber => {
   const nonameId = await User.findOne({
     name: 'noname user',
   });
-  if (!nonameId) return [];
+  console.log('NONAME', nonameId);
+  if (!nonameId) {
+    throw createHttpError(404, 'User not found');
+  }
+  const source = await DataSource.findOne({
+    source_number: parseInt(sourceNumber, 10),
+  });
+  console.log('NONAME SOURCR', source);
+  if (!source) {
+    throw createHttpError(404, 'Source not found for this data');
+  }
 
-  const sourceId = await DataSource.findOne({ source_number: number });
-  if (!sourceId) return [];
-
-  return await Data.find({ id_source: sourceId._id });
+  return await Data.find({ id_source: source._id });
 };
 
 export default getNonameDataBySourceService;

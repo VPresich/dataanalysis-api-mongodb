@@ -4,7 +4,7 @@ import updateAvatarController from './update_avatar_controller.js';
 import updateProfileController from './update_profile_controller.js';
 import updateThemeController from './update_theme_controller.js';
 import getThemeController from './get_theme_controller.js';
-import updateUserInfoController from './update_userInfo_controller.js';
+import updateUserInfoController from './update_user_info_controller.js';
 
 export default {
   getCurrentController,

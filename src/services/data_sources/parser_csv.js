@@ -15,12 +15,18 @@ function convertValue(value) {
   return trimmed;
 }
 
-export const parseAndSaveCsv = (fileObj, dataSource) => {
+/**
+ * Parses a tab-delimited CSV file and saves its contents to the database.
+ * If a MongoDB session is provided, the insert operation runs within the transaction.
+ *
+ * @param {Object} fileObj - The uploaded file object.
+ * @param {Object} dataSource - The DataSource document reference.
+ * @param {ClientSession} [session] - Optional MongoDB session for transactions.
+ * @returns {Promise<Object>} Summary of the upload result.
+ */
+export const parseAndSaveCsv = (fileObj, dataSource, session = null) => {
   return new Promise((resolve, reject) => {
     const results = [];
-    // let lineNumber = 0;
-
-    // console.log(`Starting to parse file: ${fileObj.path}`);
 
     fs.createReadStream(fileObj.path)
       .pipe(
@@ -33,41 +39,35 @@ export const parseAndSaveCsv = (fileObj, dataSource) => {
         })
       )
       .on('data', row => {
-        // lineNumber++;
-        // if (lineNumber <= 3) console.log(`Row ${lineNumber}:`, row);
-
         if (Object.keys(row).length === 0) return;
         results.push({ id_source: dataSource._id, ...row });
       })
       .on('end', async () => {
-        // console.log(`Parsing finished. Total rows: ${results.length}`);
-
         if (results.length === 0)
           return reject(
             new Error('File is empty or not properly tab-delimited.')
           );
 
         try {
-          // console.log('Saving data to database...');
-          const inserted = await Data.insertMany(results);
-          // console.log(`Saved ${inserted.length} records.`);
+          const inserted = session
+            ? await Data.insertMany(results, { session })
+            : await Data.insertMany(results);
+
           try {
             fs.unlinkSync(fileObj.path);
           } catch (e) {
             console.warn(`Could not delete file: ${e.message}`);
           }
+
           resolve({
             message: 'Data uploaded successfully',
-            sourceId: dataSource._id,
             totalRecords: inserted.length,
           });
         } catch (err) {
-          console.error('Database insert error:', err);
           reject(err);
         }
       })
       .on('error', err => {
-        console.error('File read error:', err);
         reject(err);
       });
   });

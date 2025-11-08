@@ -1,5 +1,5 @@
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
-import getNonameDataBySourceService from '../../services/data/get_noname_data_service.js';
+import getNonameDataBySourceService from '../../services/data/get_noname_data_by_source_service.js';
 
 /**
  * Controller: Get noname user data of source number
@@ -7,8 +7,8 @@ import getNonameDataBySourceService from '../../services/data/get_noname_data_se
  * Returns the data records.
  */
 const getNonameDataBySourceController = ctrlWrapper(async (req, res) => {
-  const { number } = req.params;
-  const result = await getNonameDataBySourceService(number);
+  const { sourceNumber } = req.params;
+  const result = await getNonameDataBySourceService(sourceNumber);
   res.status(200).json(result);
 });
 

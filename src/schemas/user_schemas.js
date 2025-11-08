@@ -25,17 +25,16 @@ export const loginSchema = Joi.object({
 
 export const profileSchema = Joi.object({
   name: Joi.string().optional().pattern(NAME_PATTERN),
-  email: Joi.string().email().optional().pattern(EMAIL_PATTERN),
   password: Joi.string().min(6).optional(),
   theme: Joi.string()
-    .valid('yellow', 'green', 'blue', 'pink', 'red', 'default')
+    .valid('default', 'yellow', 'green', 'blue', 'red')
     .insensitive()
     .optional(),
 });
 
 export const themeSchema = Joi.object({
-  color: Joi.string()
-    .valid('yellow', 'green', 'blue', 'pink', 'red')
+  theme: Joi.string()
+    .valid('default', 'yellow', 'green', 'blue', 'red')
     .insensitive()
     .required(),
   app: Joi.string().valid('dataanalysis').default('dataanalysis').optional(),

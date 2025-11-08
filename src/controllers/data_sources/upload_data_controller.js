@@ -1,6 +1,6 @@
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
 import createHttpError from 'http-errors';
-import uploadDataService from '../../services/data/upload_data_service.js';
+import uploadDataService from '../../services/data_sources/upload_data_service.js';
 
 const uploadDataController = ctrlWrapper(async (req, res, next) => {
   const { id } = req.user;

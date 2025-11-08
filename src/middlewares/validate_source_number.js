@@ -1,11 +1,11 @@
 export const validateSourceNumber = (req, res, next) => {
-  const { number } = req.params;
+  const { sourceNumber } = req.params;
 
-  if (!number) {
+  if (!sourceNumber) {
     return res.status(400).json({ message: 'Source number is required' });
   }
 
-  const parsedNumber = Number(number);
+  const parsedNumber = Number(sourceNumber);
   if (isNaN(parsedNumber)) {
     return res.status(400).json({ message: 'Source number must be a number' });
   }

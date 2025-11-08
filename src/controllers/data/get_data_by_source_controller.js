@@ -11,9 +11,9 @@ import getDataBySourceService from '../../services/data/get_data_by_source_servi
  */
 const getDataBySourceController = ctrlWrapper(async (req, res) => {
   const { id } = req.user;
-  const { number } = req.params;
+  const { sourceNumber } = req.params;
 
-  const result = await getDataBySourceService({ id, number });
+  const result = await getDataBySourceService({ id, sourceNumber });
 
   res.status(200).json(result);
 });
