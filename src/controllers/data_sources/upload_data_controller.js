@@ -9,7 +9,7 @@ const uploadDataController = ctrlWrapper(async (req, res, next) => {
     source_number,
     source_name = 'dataIMM',
     file_name = '',
-    source_comment = '',
+    comment = '',
   } = req.body;
 
   if (!id) return next(createHttpError(401, 'Unauthorized'));
@@ -26,7 +26,7 @@ const uploadDataController = ctrlWrapper(async (req, res, next) => {
     source_number: sNumber,
     source_name,
     file_name,
-    source_comment,
+    comment,
     fileObj: datafile,
   });
 
@@ -34,9 +34,3 @@ const uploadDataController = ctrlWrapper(async (req, res, next) => {
 });
 
 export default uploadDataController;
-
-// if (err.code === 11000) {
-//   return next(
-//     createHttpError(409, 'number_source must be unique for this user')
-//   );
-// }

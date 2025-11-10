@@ -9,7 +9,7 @@ const uploadDataService = async ({
   source_number,
   source_name,
   file_name,
-  source_comment,
+  comment,
   fileObj,
 }) => {
   const session = await mongoose.startSession();
@@ -25,7 +25,7 @@ const uploadDataService = async ({
     }).session(session);
 
     if (existingSource) {
-      throw createHttpError(400, 'Source with this number already exists');
+      throw createHttpError(409, 'Source with this number already exists');
     }
 
     const dataSource = new DataSource({
@@ -33,7 +33,7 @@ const uploadDataService = async ({
       source_number,
       source_name,
       file_name,
-      source_comment,
+      comment,
     });
 
     await dataSource.save({ session });

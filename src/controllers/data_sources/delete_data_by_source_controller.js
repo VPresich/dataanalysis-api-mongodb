@@ -7,7 +7,7 @@ const deleteDataBySourceController = ctrlWrapper(async (req, res) => {
 
   const result = await deleteDataBySourceService({ id, sourceNumber });
 
-  res.status(204).json(result);
+  res.status(200).json(result);
 });
 
 export default deleteDataBySourceController;

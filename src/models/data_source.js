@@ -19,7 +19,7 @@ const dataSourceSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    source_comment: {
+    comment: {
       type: String,
       default: null,
     },

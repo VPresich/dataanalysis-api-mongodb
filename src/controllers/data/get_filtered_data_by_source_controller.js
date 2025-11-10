@@ -3,11 +3,10 @@ import getFilteredDataBySourceService from '../../services/data/get_filtered_dat
 
 const getFilteredDataBySourceController = ctrlWrapper(
   async (req, res, next) => {
-    const { id } = req.user; // current user's ID
+    const { id } = req.user;
     const { sourceNumber } = req.params;
     const { startTime, endTime } = req.query;
 
-    // Call the service to get data
     const dataRecords = await getFilteredDataBySourceService({
       id,
       sourceNumber,

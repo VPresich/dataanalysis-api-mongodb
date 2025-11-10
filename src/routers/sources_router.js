@@ -4,18 +4,24 @@ import dataSources from '../controllers/data_sources/index.js';
 import validateParam from '../middlewares/validate_param.js';
 import validateBody from '../middlewares/validate_body.js';
 import uploadMiddleware from '../middlewares/upload_middleware.js';
-import { sourceNumberSchema, dataSchema } from '../schemas/data_schemas.js';
+import {
+  sourceNumberSchema,
+  dataSchema,
+  sourceUpdateSchema,
+} from '../schemas/data_schemas.js';
 
 const sourcesRouter = express.Router();
 
-sourcesRouter.get('/', authMiddleware, dataSources.getAllSourcesController);
 sourcesRouter.get('/noname/sources', dataSources.getNonameSourcesController);
 
-sourcesRouter.delete(
-  '/delete/:sourceNumber',
+sourcesRouter.get('/', authMiddleware, dataSources.getAllSourcesController);
+
+sourcesRouter.post(
+  '/',
   authMiddleware,
-  validateParam(sourceNumberSchema, 'sourceNumber'),
-  dataSources.deleteDataBySourceController
+  uploadMiddleware.single('datafile'),
+  validateBody(dataSchema),
+  dataSources.uploadDataController
 );
 
 sourcesRouter.delete(
@@ -24,12 +30,19 @@ sourcesRouter.delete(
   dataSources.deleteAllSourcesAndDataController
 );
 
-sourcesRouter.patch(
-  '/upload',
+sourcesRouter.delete(
+  '/:sourceNumber',
   authMiddleware,
-  uploadMiddleware.single('datafile'),
-  validateBody(dataSchema),
-  dataSources.uploadDataController
+  validateParam(sourceNumberSchema, 'sourceNumber'),
+  dataSources.deleteDataBySourceController
+);
+
+sourcesRouter.patch(
+  '/:sourceNumber',
+  authMiddleware,
+  validateParam(sourceNumberSchema, 'sourceNumber'),
+  validateBody(sourceUpdateSchema),
+  dataSources.updateSourceController
 );
 
 export default sourcesRouter;

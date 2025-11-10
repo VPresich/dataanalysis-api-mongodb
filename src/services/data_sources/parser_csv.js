@@ -6,6 +6,8 @@ function convertValue(value) {
   if (value == null) return '';
   const trimmed = value.trim();
 
+  if (trimmed === 'None') return 'None';
+
   if (trimmed === '') return '';
   const num = Number(trimmed);
   if (!isNaN(num) && trimmed.match(/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i)) {

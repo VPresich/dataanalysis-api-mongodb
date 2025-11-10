@@ -12,7 +12,7 @@ import Data from '../../models/data.js';
 const getDataBySourceService = async ({ id, sourceNumber }) => {
   const source = await DataSource.findOne({
     id_user: id,
-    source_number: parseInt(sourceNumber, 10),
+    source_number: sourceNumber,
   });
 
   if (!source) {
