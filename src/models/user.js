@@ -37,8 +37,10 @@ const userSchema = new mongoose.Schema(
     },
     verificationToken: {
       type: String,
-      required: [true, 'Verify token is required'],
-      default: () => crypto.randomUUID(), // generate unique verification token
+      required: false,
+      default: function () {
+        return this.verify ? null : crypto.randomUUID();
+      },
     },
     theme: {
       type: String,

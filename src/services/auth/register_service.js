@@ -13,14 +13,20 @@ const registerService = async ({ name, email, password }) => {
   // Check if the user already exists
   const existingUser = await User.findOne({ email: emailInLowerCase });
   if (existingUser) {
-    throw createHttpError(409, 'Email in use');
+    throw createHttpError(
+      409,
+      'Email is already in use. Please log in instead.'
+    );
   }
 
   // Hash the password
   const hashPassword = await bcrypt.hash(password, 10);
 
   const avatarURL = PATH_DEF_AVATAR;
-  const verificationToken = crypto.randomUUID();
+
+  const requireVerification = env('REQUIRE_EMAIL_VERIFICATION') === 'true';
+  const verificationToken = requireVerification ? crypto.randomUUID() : null;
+  const verifyStatus = !requireVerification;
 
   // Create a new user
   const newUser = await User.create({
@@ -28,29 +34,32 @@ const registerService = async ({ name, email, password }) => {
     email: emailInLowerCase,
     password: hashPassword,
     avatarURL,
-    verificationToken, // store verification token for email verification
-    verify: false, // user not verified yet
-    theme: DEF_THEME, // default theme
-    token: null, // JWT token will be added later
+    verificationToken,
+    verify: verifyStatus,
+    theme: DEF_THEME,
+    token: null,
   });
 
-  const requireVerification = env('REQUIRE_EMAIL_VERIFICATION') === 'true';
-
   if (requireVerification) {
+    let emailSent = false;
+
     try {
       await sendVerificationToken(emailInLowerCase, verificationToken);
-      return {
-        verifyRequired: true,
-        user: {
-          name: newUser.name,
-          email: newUser.email,
-        },
-        message: 'Verification email sent. Please check your inbox.',
-      };
+      emailSent = true;
     } catch (err) {
       console.error('Failed to send verification email:', err.message);
-      throw createHttpError(500, 'Failed to send verification email');
     }
+
+    return {
+      verifyRequired: true,
+      user: {
+        name: newUser.name,
+        email: newUser.email,
+      },
+      message: emailSent
+        ? 'Verification email sent. Please check your inbox.'
+        : 'Verification email could not be sent. You may need to verify your email manually.',
+    };
   }
 
   // Generate JWT token

@@ -13,7 +13,6 @@ import { env } from '../../utils/env.js';
  * @param {string} verificationToken - token used to verify the user's email
  */
 const sendVerificationToken = async (email, verificationToken) => {
-  //Check user
   const user = await User.findOne({ email });
   if (!user) {
     throw createHttpError(404, 'User not found');

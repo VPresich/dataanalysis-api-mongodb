@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import User from '../../models/user.js';
 import { PATH_DEF_AVATAR } from '../../constants/index.js';
@@ -32,17 +33,21 @@ export const googleLoginService = async ({ userInfo, tokens }) => {
     if (user) {
       if (!user.googleId) {
         user.googleId = googleId;
+        if (!user.verify) {
+          user.verify = true;
+          user.verificationToken = null;
+        }
         await user.save();
       }
     } else {
-      const hashPassword = await bcrypt.hash('random_password', 10);
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      const hashPassword = await bcrypt.hash(randomPassword, 10);
       user = new User({
         name,
         email: emailLower,
         password: hashPassword,
         googleId,
         avatarURL: PATH_DEF_AVATAR,
-        verificationToken: 'verified',
         verify: true,
       });
       await user.save();

@@ -27,7 +27,7 @@ export const loginService = async (email, password) => {
   }
 
   if (env('REQUIRE_EMAIL_VERIFICATION') === 'true' && !user.verify) {
-    throw createHttpError(403, 'Your account is not verified');
+    throw createHttpError(403, 'Please verify your email before logging in.');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);

@@ -16,15 +16,6 @@ authRouter.post(
   validateBody(registerSchema),
   auth.registerController
 );
-
-//verification email
-authRouter.post(
-  '/verify',
-  validateBody(emailSchema),
-  auth.resendVerifyEmailController
-);
-authRouter.get('/verify/:verificationToken', auth.verifyEmailController);
-
 authRouter.post('/login', validateBody(loginSchema), auth.loginController);
 authRouter.post('/logout', authMiddleware, auth.logoutController);
 authRouter.get('/google', auth.googleAuthController);
@@ -32,10 +23,18 @@ authRouter.get('/google-redirect', auth.googleRedirectController);
 
 // change password
 authRouter.post(
-  '/send-reset-email',
+  '/request-reset-pwd',
   validateBody(emailSchema),
   auth.requestResetEmailController
 );
 authRouter.post('/reset-pwd', validateBody(resetPasswordSchema));
+
+//verification email
+authRouter.post(
+  '/resend-verify-email',
+  validateBody(emailSchema),
+  auth.resendVerifyEmailController
+);
+authRouter.get('/verify/:verificationToken', auth.verifyEmailController);
 
 export default authRouter;
