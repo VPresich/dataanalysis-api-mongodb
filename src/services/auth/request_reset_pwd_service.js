@@ -14,7 +14,7 @@ import { sendEmail } from '../../utils/send_mail_brevo.js';
  * @param {string} email - User's email address
  * @returns {Promise<void>}
  */
-const requestResetEmailService = async email => {
+const requestResetPwdService = async email => {
   // Check if the user exists
   const user = await User.findOne({ email });
   if (!user) {
@@ -25,7 +25,7 @@ const requestResetEmailService = async email => {
   const resetToken = jwt.sign(
     { sub: user._id, email },
     env('JWT_SECRET'),
-    { expiresIn: '5m' } // token expires in 5 minutes
+    { expiresIn: '15m' } // token expires in 15 minutes
   );
 
   // Path to the email template
@@ -62,4 +62,4 @@ const requestResetEmailService = async email => {
   }
 };
 
-export default requestResetEmailService;
+export default requestResetPwdService;

@@ -13,7 +13,7 @@ const verifyEmailService = async verificationToken => {
   }
 
   user.verify = true;
-  user.verificationToken = ' ';
+  user.verificationToken = null;
   await user.save();
 
   return user;

@@ -21,17 +21,17 @@ authRouter.post('/logout', authMiddleware, auth.logoutController);
 authRouter.get('/google', auth.googleAuthController);
 authRouter.get('/google-redirect', auth.googleRedirectController);
 
-// change password
+// forgot password
 authRouter.post(
   '/request-reset-pwd',
   validateBody(emailSchema),
-  auth.requestResetEmailController
+  auth.requestResetPwdController
 );
 authRouter.post('/reset-pwd', validateBody(resetPasswordSchema));
 
 //verification email
 authRouter.post(
-  '/resend-verify-email',
+  '/resend-verify',
   validateBody(emailSchema),
   auth.resendVerifyEmailController
 );

@@ -8,8 +8,9 @@ const resendVerifyEmailController = ctrlWrapper(async (req, res) => {
     throw createHttpError(400, 'Email is required');
   }
   await resendVerificationEmailService(email);
-  res.json({
-    message: 'Verify email sent',
+  res(200).json({
+    message:
+      'A verification email has been sent. Please check your inbox to verify your account.',
   });
 });
 
