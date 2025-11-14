@@ -33,7 +33,7 @@ authRouter.post('/reset-pwd', validateBody(resetPasswordSchema));
 authRouter.post(
   '/resend-verify',
   validateBody(emailSchema),
-  auth.resendVerifyEmailController
+  auth.resendVerifyController
 );
 authRouter.get('/verify/:verificationToken', auth.verifyEmailController);
 

@@ -5,9 +5,9 @@ const requestResetPwdController = async (req, res) => {
 
   await requestResetPwdService(email);
 
-  res.json({
-    status: 200,
-    message: 'Reset password email has been successfully sent.',
+  res.status(200).json({
+    message:
+      'If an account with this email exists, a password reset link has been sent. Please check your inbox and follow the instructions to reset your password.',
     data: {},
   });
 };
