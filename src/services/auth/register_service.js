@@ -5,7 +5,7 @@ import createHttpError from 'http-errors';
 import { env } from '../../utils/env.js';
 import User from '../../models/user.js';
 import { PATH_DEF_AVATAR, DEF_THEME } from '../../constants/index.js';
-import sendVerificationToken from './send_verification_token.js';
+import { sendToken } from './send_token.js';
 
 const registerService = async ({ name, email, password }) => {
   const emailInLowerCase = email.toLowerCase();
@@ -44,8 +44,15 @@ const registerService = async ({ name, email, password }) => {
     let emailSent = false;
 
     try {
-      await sendVerificationToken(emailInLowerCase, verificationToken);
-      emailSent = true;
+      const link = `${env(
+        'BACKEND_BASE_URL'
+      )}/auth/verify/${verificationToken}`;
+      await sendToken(
+        email.toLowerCase(),
+        'Verify your email address',
+        link,
+        'verification_email.html'
+      );
     } catch (err) {
       console.error('Failed to send verification email:', err.message);
     }
