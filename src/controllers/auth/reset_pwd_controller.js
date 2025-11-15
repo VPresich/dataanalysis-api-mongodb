@@ -6,7 +6,7 @@ const resetPwdController = async (req, res) => {
   await resetPwdService(password, token);
 
   res.status(200).json({
-    message: 'Success password change',
+    message: 'Password changed successfully!',
     data: {},
   });
 };

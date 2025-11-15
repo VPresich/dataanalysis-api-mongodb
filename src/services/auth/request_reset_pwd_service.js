@@ -15,6 +15,13 @@ const requestResetPwdService = async email => {
     throw createHttpError(404, 'User not found!');
   }
 
+  if (env('REQUIRE_EMAIL_VERIFICATION') === 'true' && !user.verify) {
+    throw createHttpError(
+      403,
+      'Please verify your email before reset password in.'
+    );
+  }
+
   const resetToken = jwt.sign({ sub: user._id, email }, env('JWT_SECRET'), {
     expiresIn: '15m',
   });
