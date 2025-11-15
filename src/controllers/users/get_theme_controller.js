@@ -1,5 +1,5 @@
 import { ctrlWrapper } from '../../utils/ctrl_wrapper.js';
-import getUserThemeService from '../../services/users/get_user_theme_service.js';
+import getThemeService from '../../services/users/get_theme_service.js';
 
 /**
  * Controller to get the current user's theme.
@@ -7,7 +7,7 @@ import getUserThemeService from '../../services/users/get_user_theme_service.js'
  */
 const getThemeController = ctrlWrapper(async (req, res) => {
   const { id } = req.user;
-  const theme = await getUserThemeService(id);
+  const theme = await getThemeService(id);
   res.status(200).json({ theme });
 });
 

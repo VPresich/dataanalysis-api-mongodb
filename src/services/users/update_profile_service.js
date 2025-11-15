@@ -9,13 +9,7 @@ import { AVATAR_SIZE } from '../../constants/index.js';
 /**
  * Service: Updates user profile data (name, password, theme, avatar).
  */
-const updateUserProfileService = async ({
-  id,
-  name,
-  password,
-  theme,
-  file,
-}) => {
+const updateProfileService = async ({ id, name, password, theme, file }) => {
   const updatedUserData = {};
   if (name) updatedUserData.name = name;
   if (theme) updatedUserData.theme = theme;
@@ -51,4 +45,4 @@ const updateUserProfileService = async ({
   return updatedUser;
 };
 
-export default updateUserProfileService;
+export default updateProfileService;

@@ -11,7 +11,7 @@ import User from '../../models/user.js';
  * @param {string} [params.theme] - new theme
  * @returns {Promise<Object>} updated user document
  */
-const updateUserInfoService = async ({ id, name, email, password, theme }) => {
+const updateInfoService = async ({ id, name, email, password, theme }) => {
   const updatedUserData = {};
   if (name) updatedUserData.name = name;
   if (theme) updatedUserData.theme = theme;
@@ -28,4 +28,4 @@ const updateUserInfoService = async ({ id, name, email, password, theme }) => {
   return updatedUser;
 };
 
-export default updateUserInfoService;
+export default updateInfoService;

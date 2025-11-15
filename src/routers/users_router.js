@@ -12,7 +12,7 @@ usersRouter.patch(
   '/',
   authMiddleware,
   validateBody(profileSchema),
-  users.updateUserInfoController
+  users.updateInfoController
 );
 
 usersRouter.patch(
@@ -22,7 +22,7 @@ usersRouter.patch(
   users.updateAvatarController
 );
 
-usersRouter.get('/avatar', authMiddleware, users.getAvatarUrlController);
+usersRouter.get('/avatars', authMiddleware, users.getAvatarUrlController);
 
 usersRouter.patch(
   '/themes',
