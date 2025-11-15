@@ -6,6 +6,7 @@ import googleRedirectController from './google_redirect_controller.js';
 import resendVerifyController from './resend_verify_controller.js';
 import verifyEmailController from './verify_email_controller.js';
 import requestResetPwdController from './request_reset_pwd_controller.js';
+import resetPwdController from './reset_pwd_controller.js';
 
 export default {
   registerController,
@@ -16,4 +17,5 @@ export default {
   googleAuthController,
   googleRedirectController,
   requestResetPwdController,
+  resetPwdController,
 };

@@ -27,7 +27,11 @@ authRouter.post(
   validateBody(emailSchema),
   auth.requestResetPwdController
 );
-authRouter.post('/reset-pwd', validateBody(resetPasswordSchema));
+authRouter.post(
+  '/reset-pwd',
+  validateBody(resetPasswordSchema),
+  auth.resetPwdController
+);
 
 //verification email
 authRouter.post(
