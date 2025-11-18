@@ -9,6 +9,13 @@ export const updateProfileController = ctrlWrapper(async (req, res, next) => {
   const { id } = req.user;
   const { file } = req;
   const { name, password, theme } = req.body;
+
+  const nothingToUpdate = !file && !name && !password && !theme;
+
+  if (nothingToUpdate) {
+    return res.status(200).json(req.user);
+  }
+
   const updatedUser = await updateProfileService({
     id,
     name,

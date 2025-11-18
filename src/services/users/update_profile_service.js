@@ -31,7 +31,7 @@ const updateProfileService = async ({ id, name, password, theme, file }) => {
     } else {
       avatarURL = await saveFileToUploadDir(file);
     }
-    updatedUserData.avatarURL = avatarURL;
+    if (avatarURL) updatedUserData.avatarURL = avatarURL;
   }
 
   const updatedUser = await User.findByIdAndUpdate(id, updatedUserData, {

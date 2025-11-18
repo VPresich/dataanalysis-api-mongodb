@@ -22,6 +22,8 @@ export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
 
 export const SWAGGER_PATH = path.join(process.cwd(), 'docs', 'swagger.json');
 
+export const FILE_SIZE = 5 * 1024 * 1024;
+
 export const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 export const PHONE_PATTERN = /^\(\d{3}\) \d{3}-\d{4}$/;
 export const NAME_PATTERN =
