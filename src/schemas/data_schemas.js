@@ -19,7 +19,7 @@ export const sourceNumberSchema = Joi.number()
   });
 
 export const sourceUpdateSchema = Joi.object({
-  source_name: Joi.string().max(50).optional().default('dataIMM'),
-  file_name: Joi.string().max(255).optional().default('logIMM.txt'),
+  source_name: Joi.string().max(50).optional(),
+  file_name: Joi.string().max(255).optional(),
   comment: Joi.string().max(500).optional(),
 });
