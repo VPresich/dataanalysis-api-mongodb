@@ -1,4 +1,3 @@
-import createHttpError from 'http-errors';
 import DataSource from '../../models/data_source.js';
 
 import Data from '../../models/data.js';
@@ -25,16 +24,15 @@ const getNonameDataBySourceService = async sourceNumber => {
   const nonameId = await User.findOne({
     name: 'noname user',
   });
-  console.log('NONAME', nonameId);
   if (!nonameId) {
-    throw createHttpError(404, 'User not found');
+    return [];
   }
   const source = await DataSource.findOne({
+    id_user: nonameId._id,
     source_number: parseInt(sourceNumber, 10),
   });
-  console.log('NONAME SOURCR', source);
   if (!source) {
-    throw createHttpError(404, 'Source not found for this data');
+    return [];
   }
 
   return await Data.find({ id_source: source._id });
